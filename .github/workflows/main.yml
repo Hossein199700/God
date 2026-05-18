@@ -16,6 +16,6 @@ jobs:
         with:
           flutter-version: '3.24.0'
 
-      - run: flutter create .
+      - run: flutter create . --project-name mathverse
       - run: flutter pub get
       - run: flutter build apk --release
