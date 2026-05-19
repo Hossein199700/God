@@ -1,47 +1,73 @@
 import 'package:flutter/material.dart';
-import 'services/storage_service.dart';
-import 'services/auth_service.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+
 import 'screens/login_screen.dart';
 
 void main() async {
 
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding
+      .ensureInitialized();
 
-  await StorageService.init();
+  await Hive.initFlutter();
 
-  await AuthService.seedAdmins();
+  await Hive.openBox(
+    "users",
+  );
 
-  runApp(const App());
+  await Hive.openBox(
+    "feedbacks",
+  );
+
+  runApp(
+    const MathVerse(),
+  );
 
 }
 
-class App extends StatelessWidget {
+class MathVerse
+    extends StatelessWidget {
 
-  const App({super.key});
+  const MathVerse({
+    super.key,
+  });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(
+      BuildContext context,
+      ){
 
     return MaterialApp(
 
-      debugShowCheckedModeBanner:false,
+      debugShowCheckedModeBanner:
+      false,
 
-      title:"Mathverse School PRO",
+      title:
+      "MathVerse",
 
-      theme: ThemeData(
+      theme:
+      ThemeData(
 
-        useMaterial3:true,
-
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.green,
-        ),
+        primarySwatch:
+        Colors.green,
 
         scaffoldBackgroundColor:
-            Colors.white,
+        Colors.white,
+
+        appBarTheme:
+        const AppBarTheme(
+
+          backgroundColor:
+          Colors.green,
+
+          foregroundColor:
+          Colors.white,
+
+        ),
 
       ),
 
-      home: const LoginScreen(),
+      home:
+      const LoginScreen(),
 
     );
 
