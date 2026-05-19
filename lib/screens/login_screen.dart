@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 
-import '../services/auth_service.dart';
 import '../models/user_model.dart';
 import 'register_screen.dart';
-import 'student_home.dart';
-import 'admin_panel.dart';
+import 'home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
 
@@ -25,183 +24,338 @@ class _LoginScreenState
   final passwordController =
       TextEditingController();
 
-  String error = "";
+  Future<void> login() async {
 
-  void login() {
+    String username =
+        usernameController.text.trim();
 
-    UserModel? user =
-        AuthService.login(
+    String password =
+        passwordController.text.trim();
 
-      usernameController.text.trim(),
+    final box =
+        Hive.box("users");
 
-      passwordController.text.trim(),
+    if(
 
-    );
+    username=="Hossein_1997"
 
-    if(user==null){
+        &&
 
-      setState(() {
+        password=="1234567"
 
-        error =
-        "نام کاربری یا رمز اشتباه است";
+    ){
 
-      });
+      Navigator.push(
+
+        context,
+
+        MaterialPageRoute(
+
+          builder:(context)=>HomeScreen(
+
+            user: UserModel(
+
+              username:
+              "Hossein_1997",
+
+              password:
+              "1234567",
+
+              role:"admin",
+
+              bio:"",
+
+              score:0,
+
+              cups:0,
+
+            ),
+
+          ),
+
+        ),
+
+      );
 
       return;
 
     }
 
-    if(user.role=="admin"){
+    if(
 
-      Navigator.pushReplacement(
+    username=="AmirAli_1997"
+
+        &&
+
+        password=="1234567"
+
+    ){
+
+      Navigator.push(
 
         context,
 
         MaterialPageRoute(
 
-          builder: (_)=>AdminPanel(
-            user: user,
+          builder:(context)=>HomeScreen(
+
+            user: UserModel(
+
+              username:
+              "AmirAli_1997",
+
+              password:
+              "1234567",
+
+              role:"admin",
+
+              bio:"",
+
+              score:0,
+
+              cups:0,
+
+            ),
+
           ),
 
         ),
 
       );
 
-    }else{
-
-      Navigator.pushReplacement(
-
-        context,
-
-        MaterialPageRoute(
-
-          builder: (_)=>StudentHome(
-            user: user,
-          ),
-
-        ),
-
-      );
+      return;
 
     }
+
+    final data =
+    box.get(username);
+
+    if(data==null){
+
+      showError(
+        "کاربر پیدا نشد",
+      );
+
+      return;
+
+    }
+
+    final user =
+    UserModel.fromMap(
+
+      Map<String,dynamic>
+          .from(data),
+
+    );
+
+    if(user.password
+        !=password){
+
+      showError(
+        "رمز اشتباه است",
+      );
+
+      return;
+
+    }
+
+    Navigator.push(
+
+      context,
+
+      MaterialPageRoute(
+
+        builder:(context)=>
+
+            HomeScreen(
+
+              user:user,
+
+            ),
+
+      ),
+
+    );
+
+  }
+
+  void showError(
+      String message,
+      ){
+
+    ScaffoldMessenger
+        .of(context)
+
+        .showSnackBar(
+
+      SnackBar(
+
+        content:
+        Text(message),
+
+      ),
+
+    );
 
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(
+      BuildContext context,
+      ){
 
     return Scaffold(
 
-      appBar: AppBar(
-        title: const Text(
-          "Mathverse Login",
-        ),
-      ),
+      body:
+      Center(
 
-      body: Padding(
+        child:
+        SingleChildScrollView(
 
-        padding:
-            const EdgeInsets.all(20),
+          padding:
+          const EdgeInsets.all(
+            24,
+          ),
 
-        child: Column(
+          child: Column(
 
-          mainAxisAlignment:
-              MainAxisAlignment.center,
+            children: [
 
-          children: [
+              const Icon(
 
-            TextField(
+                Icons.calculate,
 
-              controller:
-                  usernameController,
+                size:90,
 
-              decoration:
-                  const InputDecoration(
-
-                labelText:
-                    "نام کاربری",
-
-                border:
-                    OutlineInputBorder(),
+                color:
+                Colors.green,
 
               ),
 
-            ),
-
-            const SizedBox(height:15),
-
-            TextField(
-
-              controller:
-                  passwordController,
-
-              obscureText:true,
-
-              decoration:
-                  const InputDecoration(
-
-                labelText:"رمز عبور",
-
-                border:
-                    OutlineInputBorder(),
-
+              const SizedBox(
+                height:15,
               ),
 
-            ),
+              const Text(
 
-            const SizedBox(height:10),
+                "MATHVERSE",
 
-            Text(
-              error,
-              style: const TextStyle(
-                color: Colors.red,
-              ),
-            ),
+                style:
+                TextStyle(
 
-            const SizedBox(height:20),
+                  fontSize:32,
 
-            SizedBox(
+                  fontWeight:
+                  FontWeight.bold,
 
-              width: double.infinity,
-
-              child: ElevatedButton(
-
-                onPressed: login,
-
-                child: const Text(
-                  "ورود",
                 ),
 
               ),
 
-            ),
-
-            TextButton(
-
-              onPressed: () {
-
-                Navigator.push(
-
-                  context,
-
-                  MaterialPageRoute(
-
-                    builder: (_)=>
-                    const RegisterScreen(),
-
-                  ),
-
-                );
-
-              },
-
-              child: const Text(
-                "ثبت نام دانش آموز",
+              const SizedBox(
+                height:35,
               ),
 
-            )
+              TextField(
 
-          ],
+                controller:
+                usernameController,
+
+                decoration:
+                const InputDecoration(
+
+                  labelText:
+                  "نام کاربری",
+
+                  border:
+                  OutlineInputBorder(),
+
+                ),
+
+              ),
+
+              const SizedBox(
+                height:15,
+              ),
+
+              TextField(
+
+                controller:
+                passwordController,
+
+                obscureText:true,
+
+                decoration:
+                const InputDecoration(
+
+                  labelText:
+                  "رمز عبور",
+
+                  border:
+                  OutlineInputBorder(),
+
+                ),
+
+              ),
+
+              const SizedBox(
+                height:25,
+              ),
+
+              SizedBox(
+
+                width:
+                double.infinity,
+
+                child:
+                ElevatedButton(
+
+                  onPressed:
+                  login,
+
+                  child:
+                  const Text(
+                    "ورود",
+                  ),
+
+                ),
+
+              ),
+
+              const SizedBox(
+                height:10,
+              ),
+
+              TextButton(
+
+                onPressed:(){
+
+                  Navigator.push(
+
+                    context,
+
+                    MaterialPageRoute(
+
+                      builder:(context)=>
+
+                      const RegisterScreen(),
+
+                    ),
+
+                  );
+
+                },
+
+                child:
+                const Text(
+                  "ثبت نام دانش آموز",
+                ),
+
+              )
+
+            ],
+
+          ),
 
         ),
 
