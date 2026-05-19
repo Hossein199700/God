@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 
-import '../services/auth_service.dart';
+import '../models/user_model.dart';
+import 'home_screen.dart';
 
-class RegisterScreen
-    extends StatefulWidget {
+class RegisterScreen extends StatefulWidget {
 
-  const RegisterScreen({super.key});
+  const RegisterScreen({
+    super.key,
+  });
 
   @override
   State<RegisterScreen> createState() =>
@@ -16,76 +19,188 @@ class RegisterScreen
 class _RegisterScreenState
     extends State<RegisterScreen> {
 
-  final userController =
+  final usernameController =
       TextEditingController();
 
-  final passController =
+  final passwordController =
       TextEditingController();
 
-  String message = "";
-
-  Future<void> register() async {
+  Future<void> register()
+  async {
 
     String username =
-        userController.text.trim();
+        usernameController.text
+            .trim();
 
     String password =
-        passController.text.trim();
+        passwordController.text
+            .trim();
 
-    if(username.isEmpty ||
-        password.isEmpty){
+    if(username.isEmpty
+        || password.isEmpty){
 
-      setState(() {
-
-        message =
-        "تمام فیلدها الزامی است";
-
-      });
+      showMessage(
+        "فیلدها خالی هستند",
+      );
 
       return;
 
     }
 
-    await AuthService.registerStudent(
+    if(
+
+    username=="Hossein_1997"
+
+        ||
+
+        username=="AmirAli_1997"
+
+    ){
+
+      showMessage(
+        "این نام رزرو شده است",
+      );
+
+      return;
+
+    }
+
+    final box =
+        Hive.box("users");
+
+    if(box.containsKey(
       username,
+    )){
+
+      showMessage(
+        "نام کاربری موجود است",
+      );
+
+      return;
+
+    }
+
+    UserModel user =
+    UserModel(
+
+      username:
+      username,
+
+      password:
       password,
+
+      role:
+      "student",
+
+      bio:"",
+
+      score:0,
+
+      cups:0,
+
     );
 
-    setState(() {
+    await box.put(
 
-      message =
-      "ثبت نام موفق";
+      username,
 
-    });
+      user.toMap(),
+
+    );
+
+    if(!mounted) return;
+
+    Navigator.pushReplacement(
+
+      context,
+
+      MaterialPageRoute(
+
+        builder:(context)=>
+
+            HomeScreen(
+
+              user:user,
+
+            ),
+
+      ),
+
+    );
+
+  }
+
+  void showMessage(
+      String text,
+      ){
+
+    ScaffoldMessenger
+        .of(context)
+
+        .showSnackBar(
+
+      SnackBar(
+
+        content:
+        Text(text),
+
+      ),
+
+    );
 
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(
+      BuildContext context,
+      ){
 
     return Scaffold(
 
       appBar: AppBar(
+
         title:
-        const Text("ثبت نام"),
+        const Text(
+          "ثبت نام",
+        ),
+
       ),
 
-      body: Padding(
+      body:
+      SingleChildScrollView(
 
         padding:
-        const EdgeInsets.all(20),
+        const EdgeInsets.all(
+          24,
+        ),
 
         child: Column(
 
-          mainAxisAlignment:
-          MainAxisAlignment.center,
-
           children: [
+
+            const SizedBox(
+              height:30,
+            ),
+
+            const Icon(
+
+              Icons.person_add,
+
+              size:90,
+
+              color:
+              Colors.green,
+
+            ),
+
+            const SizedBox(
+              height:20,
+            ),
 
             TextField(
 
               controller:
-              userController,
+              usernameController,
 
               decoration:
               const InputDecoration(
@@ -100,12 +215,14 @@ class _RegisterScreenState
 
             ),
 
-            const SizedBox(height:15),
+            const SizedBox(
+              height:18,
+            ),
 
             TextField(
 
               controller:
-              passController,
+              passwordController,
 
               obscureText:true,
 
@@ -122,29 +239,28 @@ class _RegisterScreenState
 
             ),
 
-            const SizedBox(height:20),
+            const SizedBox(
+              height:30,
+            ),
 
             SizedBox(
 
-              width: double.infinity,
+              width:
+              double.infinity,
 
-              child: ElevatedButton(
+              child:
+              ElevatedButton(
 
-                onPressed: register,
+                onPressed:
+                register,
 
                 child:
                 const Text(
-                  "ثبت نام",
+                  "ساخت حساب",
                 ),
 
               ),
 
-            ),
-
-            const SizedBox(height:10),
-
-            Text(
-              message,
             )
 
           ],
