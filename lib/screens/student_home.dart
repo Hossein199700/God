@@ -264,4 +264,163 @@ class StudentHome extends StatelessWidget {
 
               Icons.person,
 
-              "پ
+              "پروفایل",
+
+              (){
+
+                Navigator.push(
+
+                  context,
+
+                  MaterialPageRoute(
+
+                    builder:(_)=>
+                    ProfileScreen(
+                      user:user,
+                    ),
+
+                  ),
+
+                );
+
+              },
+
+            ),
+
+            menuCard(
+
+              context,
+
+              Icons.quiz,
+
+              "سوالات بی‌نهایت",
+
+              (){
+
+                Navigator.push(
+
+                  context,
+
+                  MaterialPageRoute(
+
+                    builder:(_)=>
+                    QuizScreen(
+                      user:user,
+                    ),
+
+                  ),
+
+                );
+
+              },
+
+            ),
+
+            menuCard(
+
+              context,
+
+              Icons.leaderboard,
+
+              "رنک بندی",
+
+              (){
+
+                Navigator.push(
+
+                  context,
+
+                  MaterialPageRoute(
+
+                    builder:(_)=>
+                    const LeaderboardScreen(),
+
+                  ),
+
+                );
+
+              },
+
+            ),
+
+            menuCard(
+
+              context,
+
+              Icons.feedback,
+
+              "نظرات و انتقادات",
+
+              (){
+
+                Navigator.push(
+
+                  context,
+
+                  MaterialPageRoute(
+
+                    builder:(_)=>
+                    FeedbackScreen(
+                      user:user,
+                    ),
+
+                  ),
+
+                );
+
+              },
+
+            ),
+
+          ],
+
+        ),
+
+      ),
+
+    );
+
+  }
+
+  Widget menuCard(
+
+      BuildContext context,
+
+      IconData icon,
+
+      String title,
+
+      VoidCallback onTap,
+
+      ){
+
+    return Card(
+
+      margin:
+      const EdgeInsets.only(
+        bottom:14,
+      ),
+
+      child: ListTile(
+
+        leading: Icon(
+          icon,
+          color: Colors.green,
+        ),
+
+        title: Text(title),
+
+        trailing:
+        const Icon(
+          Icons.arrow_forward_ios,
+        ),
+
+        onTap:onTap,
+
+      ),
+
+    );
+
+  }
+
+}
