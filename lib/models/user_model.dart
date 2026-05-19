@@ -1,7 +1,5 @@
 class UserModel {
 
-  String id;
-
   String username;
 
   String password;
@@ -15,38 +13,66 @@ class UserModel {
   int cups;
 
   UserModel({
-    required this.id,
+
     required this.username,
+
     required this.password,
+
     required this.role,
-    this.bio = "",
-    this.score = 0,
-    this.cups = 0,
+
+    required this.bio,
+
+    required this.score,
+
+    required this.cups,
+
   });
 
-  Map<String,dynamic> toMap() {
+  Map<String,dynamic> toMap(){
 
     return {
-      'id': id,
-      'username': username,
-      'password': password,
-      'role': role,
-      'bio': bio,
-      'score': score,
-      'cups': cups,
+
+      "username":username,
+
+      "password":password,
+
+      "role":role,
+
+      "bio":bio,
+
+      "score":score,
+
+      "cups":cups,
+
     };
+
   }
 
-  factory UserModel.fromMap(Map map) {
+  factory UserModel.fromMap(
+      Map<String,dynamic> map){
 
     return UserModel(
-      id: map['id'],
-      username: map['username'],
-      password: map['password'],
-      role: map['role'],
-      bio: map['bio'] ?? "",
-      score: map['score'] ?? 0,
-      cups: map['cups'] ?? 0,
+
+      username:
+      map["username"],
+
+      password:
+      map["password"],
+
+      role:
+      map["role"],
+
+      bio:
+      map["bio"] ?? "",
+
+      score:
+      map["score"] ?? 0,
+
+      cups:
+      map["cups"] ?? 0,
+
     );
+
   }
+
 }
